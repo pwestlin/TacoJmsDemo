@@ -1,5 +1,8 @@
-### POST single message
+### POST single message Boo
 POST http://localhost:8080/messages/Boo
+
+### POST single message Foo
+POST http://localhost:8080/messages/Foo
 
 ### POST list of messages
 POST http://localhost:8080/messages?messages=Roo&messages=Koo
