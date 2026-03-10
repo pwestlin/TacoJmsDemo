@@ -22,8 +22,12 @@ SELECT * FROM messages;
 ```
 You'll see `Boo` but not `Foo`.  
 In ActiveMQ you'll find both `Boo` and `Foo`.
+
+
 7. Annotate `send` with `@Transactional`, restart the application and do another POST with message `Foo`.
 In ActiveMQ you'll find another `Foo`.
+
+
 8. Goto to [application.yml](src/main/resources/application.yml) and "comment in":
 ```yaml
   jms:
