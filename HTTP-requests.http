@@ -1,0 +1,8 @@
+### POST single message
+POST http://localhost:8080/messages/Boo
+
+### POST list of messages
+POST http://localhost:8080/messages?messages=Roo&messages=Koo
+
+### POST list of messages with one invalid message Foo
+POST http://localhost:8080/messages?messages=Soo&messages=Moo&messages=Foo&messages=Loo

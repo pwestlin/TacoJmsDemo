@@ -1,0 +1,1 @@
+# JMS with Spring Boot gotchas

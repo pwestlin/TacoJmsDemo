@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS messages
+(
+    id         SERIAL PRIMARY KEY,
+    data       VARCHAR(20) NOT NULL,
+    skapad_vid TIMESTAMPTZ DEFAULT NOW() NOT NULL
+);
