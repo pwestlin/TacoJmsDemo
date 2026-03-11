@@ -1,8 +1,11 @@
 package nu.westlin.infortacojmsdemo
 
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.jdbc.core.simple.JdbcClient
+import org.springframework.jms.annotation.JmsListener
 import org.springframework.jms.core.JmsClient
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
@@ -53,6 +56,29 @@ class JdbcFooRepository(
             .sql("INSERT INTO messages (data) VALUES (:msg)")
             .param("msg", msg)
             .update()
+    }
+}
+
+@Service
+class MessageListenerService {
+    private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
+
+    @JmsListener(destination = "demo.queue")
+    fun demoQueueListener1(msg: String) {
+        logger.info("1: msg: $msg")
+    }
+
+/*
+    @JmsListener(destination = "demo.queue")
+    fun demoQueueListener2(msg: String) {
+        logger.info("2: msg: $msg")
+    }
+*/
+
+    @JmsListener(destination = "demo.queue2")
+    fun demoQueue2Listener1(msg: String) {
+        logger.info("2-1: msg: $msg")
+        Thread.sleep(1_000)
     }
 }
 
