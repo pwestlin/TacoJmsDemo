@@ -1,16 +1,11 @@
 package nu.westlin.infortacojmsdemo
 
-import org.springframework.beans.factory.getBean
-import org.springframework.boot.activemq.autoconfigure.ActiveMQConnectionFactoryCustomizer
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.jdbc.core.simple.JdbcClient
 import org.springframework.jms.core.JmsClient
 import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -59,26 +54,6 @@ class JdbcFooRepository(
             .param("msg", msg)
             .update()
     }
-}
-
-@Configuration
-class JmsConfiguration {
-
-    @Bean
-    fun customizer(): ActiveMQConnectionFactoryCustomizer {
-        return ActiveMQConnectionFactoryCustomizer { factory ->
-            factory.isTransactedIndividualAck = true
-        }
-    }
-
-    /*
-        @Bean
-            fun jmsConnectionFactory(): ConnectionFactory {
-                val factory: JMSConnectionFactory = ConnectionFactory("vm://localhost")
-                factory.setTransacted(true) // Aktiverar lokal JMS-transaktion
-                return factory
-            }
-    */
 }
 
 @RestController

@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
-    implementation("org.springframework.boot:spring-boot-starter-activemq")
+    implementation("org.springframework.boot:spring-boot-starter-artemis")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("tools.jackson.module:jackson-module-kotlin")
@@ -25,7 +25,7 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-activemq-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-artemis-test")
     testImplementation("org.springframework.boot:spring-boot-starter-jdbc-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     
