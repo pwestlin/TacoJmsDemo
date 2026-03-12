@@ -16,3 +16,10 @@ spring:
   #jms:
   #  listener:
   #    session-transacted: true
+
+
+tibco:
+  ems:
+    url: tcp://emsutv1.lmv.lm.se:7222,tcp://emsutv2.lmv.lm.se:7222
+    username: ak000020
+    password: ak000020

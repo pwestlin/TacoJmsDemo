@@ -1,41 +1,30 @@
 # JMS with Spring Boot gotchas
 
-`MessageSenderService.send(msg: String)` sends `msg` to a JMS queue and save `msg` to a Postgres database. This operation has to be **atomic**.
+## Tibco
+Se branch `tibco`.
 
-**If `msg` contains "Foo" a RuntimeException is thrown!** 
-
-## Test
-1. Run the application. It starts on port 8080 and it also starts a Postgres database and an Artemis broker.
-2. Execute a POST to the application with message `Boo`:
-```bash
-curl -X POST http://localhost:8080/messages/Boo
-```
-3. In the database table `messages` the message `Boo` is stored.
-4. Open up the [admin-GUI for Artemis](http://localhost:8161/admin/queues.jsp) and you'll see that `demo.queue` contains the message `Boo`.
-5. Now, Execute a POST to the application with message `Foo`:
-```bash
-curl -X POST http://localhost:8080/messages/Foo
-```
-6. You get a 500 as HTTP response code. `Foo` should not be stored in the database nor in `demo.queue`.
-```sql
-SELECT * FROM messages;
-```
-You'll see `Boo` but not `Foo`.  
-In Artemis you'll find both `Boo` and `Foo`.
-
-
-7. Annotate `send` with `@Transactional`, restart the application and do another POST with message `Foo`.
-In Artemis you'll find another `Foo`.
-
-
-8. Goto to [application.yml](src/main/resources/application.yml) and "comment in":
+1. Konfa följande i [application.yml](src/main/resources/application.yml):
 ```yaml
-  jms:
-    template:
-      session:
-        transacted: true
+tibco:
+  ems:
+    url: <tcp://dinserver:1234>
+    username: <user>
+    password: <password>
 ```
-9. Restart the application and do another POST with message `Foo`.
-No new `Foo` in the database and no new `Foo` in Artemis - woohoo!
+2. Skapa köer i Tibco mha Gems.
+   1. En kö som är non-exclusive. En ny kö blir det som standard. 
+   2. En kö som är exclusive. Skapa först en en standardkö, högerklicka på den och välja `queue properties` och sätt `isExclusive` till `true`.
+3. Ändra i `MessageListenerService` så den lyssnar på dina köer.
+4. Starta två instanser av applikationen på olika portar.
+5. Skicka nio meddelanden (med id 1-9) till den icke-exklusiva kön (byt till ditt könamn):
+```bash
+url -X POST http://localhost:8080/messages/LM.UTV.PEVEST.NONEXCLUSIVE\?messages\=1\&messages\=2\&messages\=3\&messages\=4\&messages\=5\&messages\=6\&messages\=7\&messages\=8\&messages\=9
+``` 
+6. Notera att meddelandena sprids jämnt (mha round robin) mellan de två instanserna du startat.
+7. Skicka nio meddelanden (med id 1-9) till den icke-exklusiva kön (byt till ditt könamn):
+```bash
+url -X POST http://localhost:8080/messages/LM.UTV.PEVEST.EXCLUSIVE\?messages\=1\&messages\=2\&messages\=3\&messages\=4\&messages\=5\&messages\=6\&messages\=7\&messages\=8\&messages\=9
+``` 
+8. Notera att meddelandena endast hämtas av en av de två instanserna du startat.
 
-When you set `spring.jms.template.session.transacted: true` Spring delays the JMS-send until the transaction commits. If it fails (rollback) the message is not sent. 
+Om man vill göra lite överkurs i det senare exemplet kan man döda den instans som håller på att bearbeta ett meddelande och då ser man att meddelandet lämnas tillbaka till bussen och att den instansen som fortfarande lever börjar behandla meddelandena.

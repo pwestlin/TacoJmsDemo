@@ -1,11 +1,17 @@
-### POST single message Boo
-POST http://localhost:8080/messages/Boo
+### POST single message Boo - non exclusive
+POST http://localhost:8080/messages/Boo/LM.UTV.PEVEST.NONEXCLUSIVE
+
+### POST single message Boo - exclusive
+POST http://localhost:8080/messages/Boo/LM.UTV.PEVEST.EXCLUSIVE
 
 ### POST single message Foo
 POST http://localhost:8080/messages/Foo
 
-### POST list of messages
-POST http://localhost:8080/messages?messages=Roo&messages=Koo
-
 ### POST list of messages with one invalid message Foo
 POST http://localhost:8080/messages?messages=Soo&messages=Moo&messages=Foo&messages=Loo
+
+### POST list of valid messages - non exclusive
+POST http://localhost:8080/messages/LM.UTV.PEVEST.NONEXCLUSIVE?messages=1&messages=2&messages=3&messages=4&messages=5&messages=6&messages=7&messages=8&messages=9
+
+### POST list of valid messages - exclusive
+POST http://localhost:8080/messages/LM.UTV.PEVEST.EXCLUSIVE?messages=1&messages=2&messages=3&messages=4&messages=5&messages=6&messages=7&messages=8&messages=9

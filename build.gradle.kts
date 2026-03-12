@@ -10,12 +10,14 @@ version = "0.0.1-SNAPSHOT"
 description = "InforTacoJmsDemo"
 
 repositories {
-    mavenCentral()
+    maven { url = uri("https://maven.lmv.lm.se/repo") }
+    mavenLocal()
 }
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
-    implementation("org.springframework.boot:spring-boot-starter-artemis")
+    implementation("org.springframework.boot:spring-boot-starter-jms") // JMS-stöd utan broker-specifik auto-config
+    implementation("tibco:jakarta.jms-tibjms:10.3.0")                     // Ditt TIBCO-beroende
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("tools.jackson.module:jackson-module-kotlin")
