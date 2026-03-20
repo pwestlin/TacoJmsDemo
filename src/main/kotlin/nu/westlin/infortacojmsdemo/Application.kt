@@ -79,16 +79,24 @@ class MessageListenerService {
         port = event.webServer.port.toString()
     }
 
-    @JmsListener(destination = "LM.UTV.PEVEST.NONEXCLUSIVE")
+    //@JmsListener(destination = "LM.UTV.PEVEST.NONEXCLUSIVE")
     fun nonExclusiveListener(msg: String) {
         logger.info("$port - nonExclusiveListener: msg: $msg")
+        if (msg == "1") {
+            logger.info("$port - Meddelandet var 1 och det hatar jag")
+            throw RuntimeException("Meddelandet var 1 och det hatar jag")
+        }
         Thread.sleep(5_000)
         logger.info("$port - nonExclusiveListener: Done with msg: $msg")
     }
 
-    @JmsListener(destination = "LM.UTV.PEVEST.EXCLUSIVE")
+    //@JmsListener(destination = "LM.UTV.PEVEST.EXCLUSIVE")
     fun exclusiveListener(msg: String) {
         logger.info("$port - exclusiveListener: msg: $msg")
+        if (msg == "1") {
+            logger.info("$port - Meddelandet var 1 och det hatar jag")
+            throw RuntimeException("Meddelandet var 1 och det hatar jag")
+        }
         Thread.sleep(5_000)
         logger.info("$port - exclusiveListener: Done with msg: $msg")
     }
@@ -119,11 +127,9 @@ class JmsConfiguration {
         @Value($$"${tibco.ems.url}") url: String,
         @Value($$"${tibco.ems.username}") username: String,
         @Value($$"${tibco.ems.password}") password: String
-    ): ConnectionFactory {
-        return TibjmsConnectionFactory(url).apply {
-            setUserName(username)
-            setUserPassword(password)
-        }
+    ): ConnectionFactory = TibjmsConnectionFactory(url).apply {
+        setUserName(username)
+        setUserPassword(password)
     }
 
     @Bean
@@ -132,13 +138,11 @@ class JmsConfiguration {
     @Bean
     fun jmsListenerContainerFactory(
         connectionFactory: ConnectionFactory
-    ): DefaultJmsListenerContainerFactory {
-        return DefaultJmsListenerContainerFactory().apply {
-            setConnectionFactory(connectionFactory)
-            setSessionTransacted(true)
-            // Nedan behövs inte när man satt setSessionTransacted(true), åtminstone inte i Tibco.
-            // Vi sätter det ändå för att vara lite framtidssäkra, ex. när/om vi byter till Artemis. :)
-            setSessionAcknowledgeMode(Session.SESSION_TRANSACTED)
-        }
+    ): DefaultJmsListenerContainerFactory = DefaultJmsListenerContainerFactory().apply {
+        setConnectionFactory(connectionFactory)
+        //setSessionTransacted(true)
+        // Nedan behövs inte när man satt setSessionTransacted(true), åtminstone inte i Tibco.
+        // Vi sätter det ändå för att vara lite framtidssäkra, ex. när/om vi byter till Artemis. :)
+        //setSessionAcknowledgeMode(Session.SESSION_TRANSACTED)
     }
 }

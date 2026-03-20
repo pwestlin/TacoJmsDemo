@@ -1,6 +1,8 @@
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 plugins {
-    kotlin("jvm") version "2.3.10"
-    kotlin("plugin.spring") version "2.3.10"
+    kotlin("jvm") version "2.3.20"
+    kotlin("plugin.spring") version "2.3.20"
     id("org.springframework.boot") version "4.0.3"
     id("io.spring.dependency-management") version "1.1.7"
 }
@@ -43,4 +45,11 @@ kotlin {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+/**
+ * Skickar vidare System.properties till BootRun-tasket så man ex. kan göra: gradle bootrun -Dspring.profiles.active=fisksoppa
+ */
+tasks.withType<BootRun> {
+    systemProperties(System.getProperties().mapKeys { it.key as String })
 }
